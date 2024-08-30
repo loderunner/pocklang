@@ -12,8 +12,7 @@ import (
 func TestScannerEmpty(t *testing.T) {
 	tokens, err := Scan(bytes.NewBufferString(""))
 	assert.NoErrorf(t, err, "")
-	assert.Lenf(t, tokens, 1, "")
-	assert.Equal(t, EOF, tokens[0].Type)
+	assert.Lenf(t, tokens, 0, "")
 }
 
 func TestScannerTokenType(t *testing.T) {
@@ -53,8 +52,7 @@ func TestScannerTokenType(t *testing.T) {
 		t.Run(c.name, func(t *testing.T) {
 			tokens, err := Scan(bytes.NewBufferString(c.input))
 			assert.NoErrorf(t, err, "")
-			assert.Lenf(t, tokens, 2, "")
-			assert.Equal(t, EOF, tokens[1].Type)
+			assert.Lenf(t, tokens, 1, "")
 			assert.Equal(t, c.expected, tokens[0].Type)
 		})
 	}

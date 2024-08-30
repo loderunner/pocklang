@@ -131,7 +131,6 @@ func Scan(rs io.RuneScanner) ([]Token, error) {
 		return nil, err
 	}
 
-	tokens = append(tokens, Token{Type: EOF})
 	return tokens, nil
 }
 
