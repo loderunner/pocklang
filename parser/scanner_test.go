@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"bytes"
 	"fmt"
 	"strings"
 	"testing"
@@ -10,7 +9,7 @@ import (
 )
 
 func TestScannerEmpty(t *testing.T) {
-	tokens, err := Scan(bytes.NewBufferString(""))
+	tokens, err := Scan(strings.NewReader(""))
 	assert.NoErrorf(t, err, "")
 	assert.Lenf(t, tokens, 0, "")
 }
@@ -50,7 +49,7 @@ func TestScannerTokenType(t *testing.T) {
 	t.Parallel()
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
-			tokens, err := Scan(bytes.NewBufferString(c.input))
+			tokens, err := Scan(strings.NewReader(c.input))
 			assert.NoErrorf(t, err, "")
 			assert.Lenf(t, tokens, 1, "")
 			assert.Equal(t, c.expected, tokens[0].Type)
@@ -59,25 +58,25 @@ func TestScannerTokenType(t *testing.T) {
 }
 
 func TestScannerIntegerValue(t *testing.T) {
-	tokens, err := Scan(bytes.NewBufferString("123"))
+	tokens, err := Scan(strings.NewReader("123"))
 	assert.NoErrorf(t, err, "")
 	assert.EqualValues(t, 123, tokens[0].IntegerValue)
 }
 
 func TestScannerDecimalValue(t *testing.T) {
-	tokens, err := Scan(bytes.NewBufferString("123.45"))
+	tokens, err := Scan(strings.NewReader("123.45"))
 	assert.NoErrorf(t, err, "")
 	assert.EqualValues(t, 123.45, tokens[0].DecimalValue)
 }
 
 func TestScannerStringValue(t *testing.T) {
-	tokens, err := Scan(bytes.NewBufferString(`"Hello World!"`))
+	tokens, err := Scan(strings.NewReader(`"Hello World!"`))
 	assert.NoErrorf(t, err, "")
 	assert.EqualValues(t, "Hello World!", tokens[0].StringValue)
 }
 
 func TestScannerIdentifierValue(t *testing.T) {
-	tokens, err := Scan(bytes.NewBufferString("hello_world"))
+	tokens, err := Scan(strings.NewReader("hello_world"))
 	assert.NoErrorf(t, err, "")
 	assert.EqualValues(t, "hello_world", tokens[0].IdentifierValue)
 }
@@ -128,7 +127,7 @@ func TestScannerSequence(t *testing.T) {
 	t.Parallel()
 	for _, c := range cases {
 		t.Run(c.input, func(t *testing.T) {
-			tokens, err := Scan(bytes.NewBufferString(c.input))
+			tokens, err := Scan(strings.NewReader(c.input))
 			assert.NoErrorf(t, err, "")
 			for i, expected := range c.expected {
 				compareTokens(t, expected, tokens[i])
@@ -148,7 +147,7 @@ func TestScannerErrors(t *testing.T) {
 	t.Parallel()
 	for _, c := range cases {
 		t.Run(c, func(t *testing.T) {
-			_, err := Scan(bytes.NewBufferString(c))
+			_, err := Scan(strings.NewReader(c))
 			assert.Error(t, err)
 		})
 	}
@@ -194,7 +193,7 @@ func BenchmarkScanner(b *testing.B) {
 
 			b.ResetTimer()
 			for range b.N {
-				tokens, _ = Scan(bytes.NewBufferString(input))
+				tokens, _ = Scan(strings.NewReader(input))
 			}
 		})
 	}

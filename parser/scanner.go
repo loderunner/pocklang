@@ -13,8 +13,11 @@ import (
 type TokenType int
 
 const (
+	// Guard value
+	Invalid TokenType = iota
+
 	// Logical operators
-	Or TokenType = iota
+	Or
 	And
 
 	// Comparison operators
@@ -47,10 +50,65 @@ const (
 	Decimal
 	String
 	Identifier
-
-	// EOF
-	EOF
 )
+
+func (tt TokenType) String() string {
+	switch tt {
+	case Invalid:
+		return "Invalid"
+	case Or:
+		return "Or"
+	case And:
+		return "And"
+	case Lt:
+		return "Lt"
+	case Lte:
+		return "Lte"
+	case Gt:
+		return "Gt"
+	case Gte:
+		return "Gte"
+	case Eq:
+		return "Eq"
+	case Neq:
+		return "Neq"
+	case Plus:
+		return "Plus"
+	case Minus:
+		return "Minus"
+	case Star:
+		return "Star"
+	case Slash:
+		return "Slash"
+	case Not:
+		return "Not"
+	case LeftParen:
+		return "LeftParen"
+	case RightParen:
+		return "RightParen"
+	case Dot:
+		return "Dot"
+	case True:
+		return "True"
+	case False:
+		return "False"
+	case Null:
+		return "Null"
+	case Integer:
+		return "Integer"
+	case Decimal:
+		return "Decimal"
+	case String:
+		return "String"
+	case Identifier:
+		return "Identifier"
+	}
+	return "Unknown"
+}
+
+func (tt TokenType) GoString() string {
+	return tt.String()
+}
 
 var reservedRunes = []rune{'|', '&', '<', '>', '=', '+', '-', '*', '/', '!', '"', '.', '(', ')'}
 
