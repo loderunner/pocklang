@@ -2,6 +2,7 @@ package parser
 
 import (
 	"bytes"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -181,9 +182,16 @@ func compareTokens(t *testing.T, expected, actual Token) {
 	}
 }
 
+var tokens []Token
+
 func BenchmarkScanner(b *testing.B) {
-	const input = `hello.world 12 == 4.0 "Hello World!" != <= true false !true () null`
+	input := strings.Repeat(
+		`hello.world 12 == 4.0 "Hello World!" != <= true false !true () null `,
+		256,
+	)
+
+	b.ResetTimer()
 	for range b.N {
-		Scan(bytes.NewBufferString(input))
+		tokens, _ = Scan(bytes.NewBufferString(input))
 	}
 }
