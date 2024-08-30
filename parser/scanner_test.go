@@ -2,6 +2,7 @@ package parser
 
 import (
 	"bytes"
+	"fmt"
 	"strings"
 	"testing"
 
@@ -185,13 +186,18 @@ func compareTokens(t *testing.T, expected, actual Token) {
 var tokens []Token
 
 func BenchmarkScanner(b *testing.B) {
-	input := strings.Repeat(
-		`hello.world 12 == 4.0 "Hello World!" != <= true false !true () null `,
-		256,
-	)
+	for i := range 5 {
+		count := 16 << (i * 2)
+		b.Run(fmt.Sprint(count), func(b *testing.B) {
+			input := strings.Repeat(
+				`hello.world 12 == 4.0 "Hello World!" != <= true false !true () null `,
+				count,
+			)
 
-	b.ResetTimer()
-	for range b.N {
-		tokens, _ = Scan(bytes.NewBufferString(input))
+			b.ResetTimer()
+			for range b.N {
+				tokens, _ = Scan(bytes.NewBufferString(input))
+			}
+		})
 	}
 }
