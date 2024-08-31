@@ -3,12 +3,12 @@ module github.com/loderunner/pocklang
 go 1.23.0
 
 require (
+	github.com/chzyer/readline v1.5.1
 	github.com/gkampitakis/go-snaps v0.5.7
 	github.com/stretchr/testify v1.9.0
 )
 
 require (
-	github.com/chzyer/readline v1.5.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/gkampitakis/ciinfo v0.3.0 // indirect
 	github.com/gkampitakis/go-diff v1.3.2 // indirect
