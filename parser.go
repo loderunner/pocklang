@@ -1,7 +1,6 @@
 package pock
 
 import (
-	"errors"
 	"fmt"
 	"io"
 )
@@ -16,8 +15,6 @@ import (
 // Unary   -> ("!" | "-") Primary ;
 // Primary -> "true" | "false" | "null" | INTEGER | DECIMAL | STRING | "(" Expression ")" | IDENTIFIER ("." IDENTIFIER)* ;
 
-var ParseError = errors.New("parse error")
-
 func Parse(tokens []Token) (Expr, error) {
 	var err error
 	p := parser{tokens: tokens}
@@ -28,8 +25,7 @@ func Parse(tokens []Token) (Expr, error) {
 	if !p.eof() {
 		return nil,
 			fmt.Errorf(
-				"%w at '%s': expected end of expression",
-				ParseError,
+				"at '%s': expected end of expression",
 				p.peek().Lexeme,
 			)
 	}
@@ -182,7 +178,7 @@ func (p *parser) parseUnary() (Expr, error) {
 
 func (p *parser) parsePrimary() (Expr, error) {
 	if p.eof() {
-		return nil, fmt.Errorf("%w: unexpected end of expression", ParseError)
+		return nil, fmt.Errorf("unexpected end of expression")
 	}
 
 	tok := p.peek()
@@ -196,7 +192,7 @@ func (p *parser) parsePrimary() (Expr, error) {
 		return p.parseGet()
 	}
 
-	return nil, fmt.Errorf("%w at '%s': unexpected token", ParseError, tok.Lexeme)
+	return nil, fmt.Errorf("at '%s': unexpected token", tok.Lexeme)
 }
 
 func (p *parser) parseGroup() (Expr, error) {
@@ -206,7 +202,7 @@ func (p *parser) parseGroup() (Expr, error) {
 		return nil, err
 	}
 	if p.peek().Type != RightParen {
-		return nil, fmt.Errorf("%w: missing closing parenthesis", ParseError)
+		return nil, fmt.Errorf("missing closing parenthesis")
 	}
 	p.advance()
 	return GroupExpr{Expr: expr}, nil
@@ -218,7 +214,7 @@ func (p *parser) parseGet() (Expr, error) {
 		p.advance()
 		tok := p.peek()
 		if tok.Type != Identifier {
-			return nil, fmt.Errorf("%w at '%s': expected identifier after '.'", ParseError, tok.Lexeme)
+			return nil, fmt.Errorf("at '%s': expected identifier after `.`", tok.Lexeme)
 		}
 		names = append(names, tok.Lexeme)
 	}

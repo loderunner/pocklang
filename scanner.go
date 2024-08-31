@@ -112,10 +112,7 @@ func (tt TokenType) GoString() string {
 
 var reservedRunes = []rune{'|', '&', '<', '>', '=', '+', '-', '*', '/', '!', '"', '.', '(', ')'}
 
-var (
-	ScanError       = errors.New("scan error")
-	whitespaceError = errors.New("whitespace")
-)
+var whitespaceError = errors.New("whitespace")
 
 type Token struct {
 	Type   TokenType
@@ -197,7 +194,7 @@ func scanToken(s scanner) (Token, error) {
 
 	r, err := s.advance()
 	if err != nil {
-		return Token{}, fmt.Errorf("%w: %w", ScanError, err)
+		return Token{}, err
 	}
 
 	switch r {
@@ -223,7 +220,7 @@ func scanToken(s scanner) (Token, error) {
 		if ok {
 			return Token{Type: Or, Lexeme: s.buf.String()}, nil
 		}
-		return Token{}, fmt.Errorf("%w: expected '|' after '|'", ScanError)
+		return Token{}, fmt.Errorf("expected `|` after `|`")
 	case '&':
 		ok, err := s.match('&')
 		if err != nil && !errors.Is(err, io.EOF) {
@@ -232,7 +229,7 @@ func scanToken(s scanner) (Token, error) {
 		if ok {
 			return Token{Type: And, Lexeme: s.buf.String()}, nil
 		}
-		return Token{}, fmt.Errorf("%w: expected '&&' after '&&'", ScanError)
+		return Token{}, fmt.Errorf("expected `&` after `&`")
 	case '=':
 		ok, err := s.match('=')
 		if err != nil && !errors.Is(err, io.EOF) {
@@ -241,7 +238,7 @@ func scanToken(s scanner) (Token, error) {
 		if ok {
 			return Token{Type: Eq, Lexeme: s.buf.String()}, nil
 		}
-		return Token{}, fmt.Errorf("%w: expected '=' after '='", ScanError)
+		return Token{}, fmt.Errorf("expected `=` after `=`")
 	case '!':
 		ok, err := s.match('=')
 		if err != nil && !errors.Is(err, io.EOF) {
@@ -274,7 +271,7 @@ func scanToken(s scanner) (Token, error) {
 		}
 		if err != nil {
 			if errors.Is(err, io.EOF) {
-				return Token{}, fmt.Errorf("%w: unterminated string", ScanError)
+				return Token{}, fmt.Errorf("unterminated string")
 			}
 			return Token{}, err
 		}
@@ -302,7 +299,7 @@ func scanToken(s scanner) (Token, error) {
 			if isDecimal {
 				val, err := strconv.ParseFloat(lex, 64)
 				if err != nil {
-					return Token{}, fmt.Errorf("%w: invalid number: %w", ScanError, err)
+					return Token{}, fmt.Errorf("invalid number: %w", err)
 				}
 				return Token{
 					Type:         Decimal,
@@ -312,7 +309,7 @@ func scanToken(s scanner) (Token, error) {
 			} else {
 				val, err := strconv.ParseInt(lex, 10, 64)
 				if err != nil {
-					return Token{}, fmt.Errorf("%w: invalid number: %w", ScanError, err)
+					return Token{}, fmt.Errorf("invalid number: %w", err)
 				}
 				return Token{
 					Type:         Integer,

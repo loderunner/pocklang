@@ -1,11 +1,8 @@
 package pock
 
 import (
-	"errors"
 	"fmt"
 )
-
-var InterpreterError = errors.New("error")
 
 type (
 	Value        interface{}
@@ -124,19 +121,13 @@ func (s Interpreter) evaluateBinary(expr BinaryExpr) (Value, error) {
 	case Or:
 		left, right, ok := checkBinary[bool, bool](left, right)
 		if !ok {
-			return nil, fmt.Errorf(
-				"%w: `||` operands must be boolean",
-				InterpreterError,
-			)
+			return nil, fmt.Errorf("`||` operands must be boolean")
 		}
 		return left || right, nil
 	case And:
 		left, right, ok := checkBinary[bool, bool](left, right)
 		if !ok {
-			return nil, fmt.Errorf(
-				"%w: `&&` operands must be boolean",
-				InterpreterError,
-			)
+			return nil, fmt.Errorf("`&&` operands must be boolean")
 		}
 		return left && right, nil
 	case Lt:
@@ -152,10 +143,7 @@ func (s Interpreter) evaluateBinary(expr BinaryExpr) (Value, error) {
 		if left, right, ok := checkBinary[float64, float64](left, right); ok {
 			return left < right, nil
 		}
-		return nil, fmt.Errorf(
-			"%w: `<` operands must be integer or decimal",
-			InterpreterError,
-		)
+		return nil, fmt.Errorf("`<` operands must be integer or decimal")
 	case Lte:
 		if left, right, ok := checkBinary[int64, int64](left, right); ok {
 			return left <= right, nil
@@ -169,10 +157,7 @@ func (s Interpreter) evaluateBinary(expr BinaryExpr) (Value, error) {
 		if left, right, ok := checkBinary[float64, float64](left, right); ok {
 			return left <= right, nil
 		}
-		return nil, fmt.Errorf(
-			"%w: `<=` operands must be integer or decimal",
-			InterpreterError,
-		)
+		return nil, fmt.Errorf("`<=` operands must be integer or decimal")
 	case Gt:
 		if left, right, ok := checkBinary[int64, int64](left, right); ok {
 			return left > right, nil
@@ -186,10 +171,7 @@ func (s Interpreter) evaluateBinary(expr BinaryExpr) (Value, error) {
 		if left, right, ok := checkBinary[float64, float64](left, right); ok {
 			return left > right, nil
 		}
-		return nil, fmt.Errorf(
-			"%w: `>` operands must be integer or decimal",
-			InterpreterError,
-		)
+		return nil, fmt.Errorf("`>` operands must be integer or decimal")
 	case Gte:
 		if left, right, ok := checkBinary[int64, int64](left, right); ok {
 			return left >= right, nil
@@ -203,10 +185,7 @@ func (s Interpreter) evaluateBinary(expr BinaryExpr) (Value, error) {
 		if left, right, ok := checkBinary[float64, float64](left, right); ok {
 			return left >= right, nil
 		}
-		return nil, fmt.Errorf(
-			"%w: `>=` operands must be integer or decimal",
-			InterpreterError,
-		)
+		return nil, fmt.Errorf("`>=` operands must be integer or decimal")
 	case Eq:
 		if left, right, ok := checkBinary[int64, int64](left, right); ok {
 			return left == right, nil
@@ -230,8 +209,7 @@ func (s Interpreter) evaluateBinary(expr BinaryExpr) (Value, error) {
 			return left == right, nil
 		}
 		return nil, fmt.Errorf(
-			"%w: `==` operands mismatch: %s and %s",
-			InterpreterError,
+			"`==` operands mismatch: %s and %s",
 			typeName(left),
 			typeName(right),
 		)
@@ -258,8 +236,7 @@ func (s Interpreter) evaluateBinary(expr BinaryExpr) (Value, error) {
 			return left != right, nil
 		}
 		return nil, fmt.Errorf(
-			"%w: `!=` operands mismatch: %s and %s",
-			InterpreterError,
+			"`!=` operands mismatch: %s and %s",
 			typeName(left),
 			typeName(right),
 		)
@@ -276,10 +253,7 @@ func (s Interpreter) evaluateBinary(expr BinaryExpr) (Value, error) {
 		if left, right, ok := checkBinary[float64, float64](left, right); ok {
 			return left + right, nil
 		}
-		return nil, fmt.Errorf(
-			"%w: `+` operands must be integer or decimal",
-			InterpreterError,
-		)
+		return nil, fmt.Errorf("`+` operands must be integer or decimal")
 	case Minus:
 		if left, right, ok := checkBinary[int64, int64](left, right); ok {
 			return left - right, nil
@@ -293,10 +267,7 @@ func (s Interpreter) evaluateBinary(expr BinaryExpr) (Value, error) {
 		if left, right, ok := checkBinary[float64, float64](left, right); ok {
 			return left - right, nil
 		}
-		return nil, fmt.Errorf(
-			"%w: `-` operands must be integer or decimal",
-			InterpreterError,
-		)
+		return nil, fmt.Errorf("`-` operands must be integer or decimal")
 	case Star:
 		if left, right, ok := checkBinary[int64, int64](left, right); ok {
 			return left * right, nil
@@ -310,10 +281,7 @@ func (s Interpreter) evaluateBinary(expr BinaryExpr) (Value, error) {
 		if left, right, ok := checkBinary[float64, float64](left, right); ok {
 			return left * right, nil
 		}
-		return nil, fmt.Errorf(
-			"%w: `*` operands must be integer or decimal",
-			InterpreterError,
-		)
+		return nil, fmt.Errorf("`*` operands must be integer or decimal")
 	case Slash:
 		if left, right, ok := checkBinary[int64, int64](left, right); ok {
 			return left / right, nil
@@ -327,10 +295,7 @@ func (s Interpreter) evaluateBinary(expr BinaryExpr) (Value, error) {
 		if left, right, ok := checkBinary[float64, float64](left, right); ok {
 			return left / right, nil
 		}
-		return nil, fmt.Errorf(
-			"%w: `/` operands must be integer or decimal",
-			InterpreterError,
-		)
+		return nil, fmt.Errorf("`/` operands must be integer or decimal")
 	}
 	panic(fmt.Sprintf("invalid binary operator: %s", expr.Op))
 }
@@ -345,11 +310,7 @@ func (s Interpreter) evaluateUnary(expr UnaryExpr) (Value, error) {
 		if val, ok := val.(bool); ok {
 			return !val, nil
 		}
-		return nil, fmt.Errorf(
-			"%w: %s operand must be boolean",
-			InterpreterError,
-			expr.Op,
-		)
+		return nil, fmt.Errorf("`!` operand must be boolean")
 	case Minus:
 		switch val := val.(type) {
 		case int64:
@@ -357,11 +318,7 @@ func (s Interpreter) evaluateUnary(expr UnaryExpr) (Value, error) {
 		case float64:
 			return -val, nil
 		}
-		return nil, fmt.Errorf(
-			"%w: %s operand must be integer or decimal",
-			InterpreterError,
-			expr.Op,
-		)
+		return nil, fmt.Errorf("`-` operand must be integer or decimal")
 	}
 	panic(fmt.Sprintf("invalid unary operator: %s", expr.Op))
 }
@@ -378,22 +335,22 @@ func (s Interpreter) evaluateGet(expr GetExpr) (Value, error) {
 	name := expr.Names[0]
 	val, ok := s.variables[name]
 	if !ok {
-		return nil, fmt.Errorf("%w: unknown variable '%s'", InterpreterError, name)
+		return nil, fmt.Errorf("unknown variable '%s'", name)
 	}
 	for i := 1; i < len(expr.Names); i++ {
 		var obj map[string]any
 		name = expr.Names[i]
 		if obj, ok = val.(map[string]any); !ok {
-			return nil, fmt.Errorf("%w: %s is not a map", InterpreterError, name)
+			return nil, fmt.Errorf("%s is not a map", name)
 		}
 		val, ok = obj[name]
 		if !ok {
-			return nil, fmt.Errorf("%w: unknown key '%s'", InterpreterError, name)
+			return nil, fmt.Errorf("unknown key '%s'", name)
 		}
 	}
 
 	if _, ok := val.(map[string]any); ok {
-		return nil, fmt.Errorf("%w: %s is not a primitive value", InterpreterError, name)
+		return nil, fmt.Errorf("%s is not a primitive value", name)
 	}
 
 	return val, nil
