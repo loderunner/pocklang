@@ -1,9 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
+	"flag"
 	"fmt"
 	"io"
+	"os"
 	"strings"
 
 	"github.com/chzyer/readline"
@@ -12,14 +15,35 @@ import (
 
 const version = "0.0.0"
 
+var statePath = flag.String("state", "", "a JSON file to be loaded as interpreter state")
+
 func main() {
+	flag.Parse()
+	var interpreter *pock.Interpreter
+	if *statePath == "" {
+		interpreter = pock.NewInterpreter()
+	} else {
+		var state map[string]any
+		buf, err := os.ReadFile(*statePath)
+		if err != nil {
+			panic(err.Error())
+		}
+		err = json.Unmarshal(buf, &state)
+		if err != nil {
+			panic(err.Error())
+		}
+		interpreter, err = pock.NewInterpreterWithState(state)
+		if err != nil {
+			panic(err.Error())
+		}
+	}
+
 	fmt.Printf("Pock v%s\n", version)
 
 	rl, err := readline.New("> ")
 	if err != nil {
 		panic(err.Error())
 	}
-	interpreter := pock.NewInterpreter()
 	for {
 		src, err := rl.Readline()
 		if err != nil {
