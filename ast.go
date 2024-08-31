@@ -1,4 +1,4 @@
-package parser
+package pock
 
 type Expr interface{}
 

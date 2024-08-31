@@ -1,11 +1,13 @@
-package parser
+package pock
 
 import (
+	"fmt"
+	"slices"
 	"strings"
 	"testing"
 
 	"github.com/gkampitakis/go-snaps/snaps"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestParser(t *testing.T) {
@@ -28,10 +30,10 @@ func TestParser(t *testing.T) {
 	for _, c := range cases {
 		t.Run(c.input, func(t *testing.T) {
 			tokens, err := Scan(strings.NewReader(c.input))
-			assert.NoErrorf(t, err, "")
+			require.NoError(t, err)
 			expr, err := Parse(tokens)
-			assert.NoErrorf(t, err, "")
-			assert.Equal(t, c.expected, expr)
+			require.NoError(t, err)
+			require.Equal(t, c.expected, expr)
 		})
 	}
 }
@@ -48,9 +50,9 @@ func TestParserSnapshots(t *testing.T) {
 	for _, c := range cases {
 		t.Run(c, func(t *testing.T) {
 			tokens, err := Scan(strings.NewReader(c))
-			assert.NoErrorf(t, err, "")
+			require.NoError(t, err)
 			expr, err := Parse(tokens)
-			assert.NoErrorf(t, err, "")
+			require.NoError(t, err)
 			snaps.MatchSnapshot(t, expr)
 		})
 	}
@@ -75,10 +77,32 @@ func TestParserErrors(t *testing.T) {
 	for _, c := range cases {
 		t.Run(c, func(t *testing.T) {
 			tokens, err := Scan(strings.NewReader(c))
-			assert.NoErrorf(t, err, "")
+			require.NoError(t, err)
 			_, err = Parse(tokens)
-			assert.Error(t, err)
+			require.Error(t, err)
 			snaps.MatchSnapshot(t, err)
+		})
+	}
+}
+
+var benchmarkExpr Expr
+
+func BenchmarkParser(b *testing.B) {
+	for i := range 6 {
+		count := 1 << (i * 2)
+		b.Run(fmt.Sprint(count), func(b *testing.B) {
+			input := strings.Join(slices.Repeat(
+				[]string{`(!((hello.world + 3.0) == (true && false) || "hello"))`},
+				count,
+			),
+				" && ",
+			)
+
+			b.ResetTimer()
+			for range b.N {
+				benchmarkTokens, _ = Scan(strings.NewReader(input))
+				benchmarkExpr, _ = Parse(benchmarkTokens)
+			}
 		})
 	}
 }

@@ -1,0 +1,147 @@
+
+[TestInterpreterError/1_==_true - 1]
+&fmt.wrapError{
+    msg: "error: `==` operands mismatch: integer and boolean",
+    err: &errors.errorString{s:"error"},
+}
+---
+
+[TestInterpreterError/1_||_0 - 1]
+&fmt.wrapError{
+    msg: "error: `||` operands must be boolean",
+    err: &errors.errorString{s:"error"},
+}
+---
+
+[TestInterpreterError/1_&&_"hello" - 1]
+&fmt.wrapError{
+    msg: "error: `&&` operands must be boolean",
+    err: &errors.errorString{s:"error"},
+}
+---
+
+[TestInterpreterError/"hello"_<3 - 1]
+&fmt.wrapError{
+    msg: "error: `<` operands must be integer or decimal",
+    err: &errors.errorString{s:"error"},
+}
+---
+
+[TestInterpreterError/"hello"_<=3 - 1]
+&fmt.wrapError{
+    msg: "error: `<=` operands must be integer or decimal",
+    err: &errors.errorString{s:"error"},
+}
+---
+
+[TestInterpreterError/"hello"_>_3 - 1]
+&fmt.wrapError{
+    msg: "error: `>` operands must be integer or decimal",
+    err: &errors.errorString{s:"error"},
+}
+---
+
+[TestInterpreterError/"hello"_>=_3 - 1]
+&fmt.wrapError{
+    msg: "error: `>=` operands must be integer or decimal",
+    err: &errors.errorString{s:"error"},
+}
+---
+
+[TestInterpreterError/1_==_"hello" - 1]
+&fmt.wrapError{
+    msg: "error: `==` operands mismatch: integer and string",
+    err: &errors.errorString{s:"error"},
+}
+---
+
+[TestInterpreterError/1_!=_"hello" - 1]
+&fmt.wrapError{
+    msg: "error: `!=` operands mismatch: integer and string",
+    err: &errors.errorString{s:"error"},
+}
+---
+
+[TestInterpreterError/"hello"_+_"world" - 1]
+&fmt.wrapError{
+    msg: "error: `+` operands must be integer or decimal",
+    err: &errors.errorString{s:"error"},
+}
+---
+
+[TestInterpreterError/"hello"_-_"world" - 1]
+&fmt.wrapError{
+    msg: "error: `-` operands must be integer or decimal",
+    err: &errors.errorString{s:"error"},
+}
+---
+
+[TestInterpreterError/"hello"_*_"world" - 1]
+&fmt.wrapError{
+    msg: "error: `*` operands must be integer or decimal",
+    err: &errors.errorString{s:"error"},
+}
+---
+
+[TestInterpreterError/"hello"_/_"world" - 1]
+&fmt.wrapError{
+    msg: "error: `/` operands must be integer or decimal",
+    err: &errors.errorString{s:"error"},
+}
+---
+
+[TestInterpreterError/!1 - 1]
+&fmt.wrapError{
+    msg: "error: Not operand must be boolean",
+    err: &errors.errorString{s:"error"},
+}
+---
+
+[TestInterpreterError/-true - 1]
+&fmt.wrapError{
+    msg: "error: Minus operand must be integer or decimal",
+    err: &errors.errorString{s:"error"},
+}
+---
+
+[TestInterpreterError/-true#01 - 1]
+&fmt.wrapError{
+    msg: "error: Minus operand must be integer or decimal",
+    err: &errors.errorString{s:"error"},
+}
+---
+
+[TestInterpreterError/hello - 1]
+&fmt.wrapError{
+    msg: "error: unknown variable 'hello'",
+    err: &errors.errorString{s:"error"},
+}
+---
+
+[TestInterpreterError/world - 1]
+&fmt.wrapError{
+    msg: "error: unknown variable 'world'",
+    err: &errors.errorString{s:"error"},
+}
+---
+
+[TestInterpreterError/hello.world - 1]
+&fmt.wrapError{
+    msg: "error: world is not a map",
+    err: &errors.errorString{s:"error"},
+}
+---
+
+[TestInterpreterError/hello#01 - 1]
+&fmt.wrapError{
+    msg: "error: hello is not a primitive value",
+    err: &errors.errorString{s:"error"},
+}
+---
+
+[TestInterpreterError/hello.world#01 - 1]
+&fmt.wrapError{
+    msg: "error: unknown key 'world'",
+    err: &errors.errorString{s:"error"},
+}
+---

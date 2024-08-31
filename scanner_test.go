@@ -1,4 +1,4 @@
-package parser
+package pock
 
 import (
 	"fmt"
@@ -6,12 +6,13 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestScannerEmpty(t *testing.T) {
 	tokens, err := Scan(strings.NewReader(""))
-	assert.NoErrorf(t, err, "")
-	assert.Lenf(t, tokens, 0, "")
+	require.NoError(t, err)
+	require.Len(t, tokens, 0)
 }
 
 func TestScannerTokenType(t *testing.T) {
@@ -50,35 +51,35 @@ func TestScannerTokenType(t *testing.T) {
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
 			tokens, err := Scan(strings.NewReader(c.input))
-			assert.NoErrorf(t, err, "")
-			assert.Lenf(t, tokens, 1, "")
-			assert.Equal(t, c.expected, tokens[0].Type)
+			require.NoError(t, err)
+			require.Len(t, tokens, 1)
+			require.Equal(t, c.expected, tokens[0].Type)
 		})
 	}
 }
 
 func TestScannerIntegerValue(t *testing.T) {
 	tokens, err := Scan(strings.NewReader("123"))
-	assert.NoErrorf(t, err, "")
-	assert.EqualValues(t, 123, tokens[0].IntegerValue)
+	require.NoError(t, err)
+	require.EqualValues(t, 123, tokens[0].IntegerValue)
 }
 
 func TestScannerDecimalValue(t *testing.T) {
 	tokens, err := Scan(strings.NewReader("123.45"))
-	assert.NoErrorf(t, err, "")
-	assert.EqualValues(t, 123.45, tokens[0].DecimalValue)
+	require.NoError(t, err)
+	require.EqualValues(t, 123.45, tokens[0].DecimalValue)
 }
 
 func TestScannerStringValue(t *testing.T) {
 	tokens, err := Scan(strings.NewReader(`"Hello World!"`))
-	assert.NoErrorf(t, err, "")
-	assert.EqualValues(t, "Hello World!", tokens[0].StringValue)
+	require.NoError(t, err)
+	require.EqualValues(t, "Hello World!", tokens[0].StringValue)
 }
 
 func TestScannerIdentifierValue(t *testing.T) {
 	tokens, err := Scan(strings.NewReader("hello_world"))
-	assert.NoErrorf(t, err, "")
-	assert.EqualValues(t, "hello_world", tokens[0].IdentifierValue)
+	require.NoError(t, err)
+	require.EqualValues(t, "hello_world", tokens[0].IdentifierValue)
 }
 
 func TestScannerSequence(t *testing.T) {
@@ -128,7 +129,7 @@ func TestScannerSequence(t *testing.T) {
 	for _, c := range cases {
 		t.Run(c.input, func(t *testing.T) {
 			tokens, err := Scan(strings.NewReader(c.input))
-			assert.NoErrorf(t, err, "")
+			require.NoError(t, err)
 			for i, expected := range c.expected {
 				compareTokens(t, expected, tokens[i])
 			}
@@ -148,7 +149,7 @@ func TestScannerErrors(t *testing.T) {
 	for _, c := range cases {
 		t.Run(c, func(t *testing.T) {
 			_, err := Scan(strings.NewReader(c))
-			assert.Error(t, err)
+			require.Error(t, err)
 		})
 	}
 }
@@ -180,7 +181,7 @@ func compareTokens(t *testing.T, expected, actual Token) {
 	}
 }
 
-var tokens []Token
+var benchmarkTokens []Token
 
 func BenchmarkScanner(b *testing.B) {
 	for i := range 5 {
@@ -193,7 +194,7 @@ func BenchmarkScanner(b *testing.B) {
 
 			b.ResetTimer()
 			for range b.N {
-				tokens, _ = Scan(strings.NewReader(input))
+				benchmarkTokens, _ = Scan(strings.NewReader(input))
 			}
 		})
 	}

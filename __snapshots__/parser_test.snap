@@ -1,0 +1,189 @@
+
+[TestParserErrors/#00 - 1]
+&fmt.wrapError{
+    msg: "parse error: unexpected end of expression",
+    err: &errors.errorString{s:"parse error"},
+}
+---
+
+[TestParserSnapshots/hello.world_>_3 - 1]
+pock.BinaryExpr{
+    Op:   Gt,
+    Left: pock.GetExpr{
+        Names: {"hello", "world"},
+    },
+    Right: pock.LiteralExpr{
+        Token: pock.Token{Type:Integer, Lexeme:"3", IntegerValue:3, DecimalValue:0, StringValue:"", IdentifierValue:""},
+    },
+}
+---
+
+[TestParserErrors/hello. - 1]
+&fmt.wrapError{
+    msg: "parse error at '': expected identifier after '.'",
+    err: &errors.errorString{s:"parse error"},
+}
+---
+
+[TestParserSnapshots/"hello"_!=_"world" - 1]
+pock.BinaryExpr{
+    Op:   Neq,
+    Left: pock.LiteralExpr{
+        Token: pock.Token{Type:String, Lexeme:"\"hello\"", IntegerValue:0, DecimalValue:0, StringValue:"hello", IdentifierValue:""},
+    },
+    Right: pock.LiteralExpr{
+        Token: pock.Token{Type:String, Lexeme:"\"world\"", IntegerValue:0, DecimalValue:0, StringValue:"world", IdentifierValue:""},
+    },
+}
+---
+
+[TestParserErrors/.hello - 1]
+&fmt.wrapError{
+    msg: "parse error at '.': unexpected token",
+    err: &errors.errorString{s:"parse error"},
+}
+---
+
+[TestParserErrors/12_< - 1]
+&fmt.wrapError{
+    msg: "parse error: unexpected end of expression",
+    err: &errors.errorString{s:"parse error"},
+}
+---
+
+[TestParserSnapshots/((3+2)_-_14)_==_-19 - 1]
+pock.BinaryExpr{
+    Op:   Eq,
+    Left: pock.GroupExpr{
+        Expr: pock.BinaryExpr{
+            Op:   Minus,
+            Left: pock.GroupExpr{
+                Expr: pock.BinaryExpr{
+                    Op:   Plus,
+                    Left: pock.LiteralExpr{
+                        Token: pock.Token{Type:Integer, Lexeme:"3", IntegerValue:3, DecimalValue:0, StringValue:"", IdentifierValue:""},
+                    },
+                    Right: pock.LiteralExpr{
+                        Token: pock.Token{Type:Integer, Lexeme:"2", IntegerValue:2, DecimalValue:0, StringValue:"", IdentifierValue:""},
+                    },
+                },
+            },
+            Right: pock.LiteralExpr{
+                Token: pock.Token{Type:Integer, Lexeme:"14", IntegerValue:14, DecimalValue:0, StringValue:"", IdentifierValue:""},
+            },
+        },
+    },
+    Right: pock.UnaryExpr{
+        Op:   Minus,
+        Expr: pock.LiteralExpr{
+            Token: pock.Token{Type:Integer, Lexeme:"19", IntegerValue:19, DecimalValue:0, StringValue:"", IdentifierValue:""},
+        },
+    },
+}
+---
+
+[TestParserErrors/12.hello - 1]
+&fmt.wrapError{
+    msg: "parse error at 'hello': expected end of expression",
+    err: &errors.errorString{s:"parse error"},
+}
+---
+
+[TestParserSnapshots/123.45_*_"d"_<_asdrg - 1]
+pock.BinaryExpr{
+    Op:   Lt,
+    Left: pock.BinaryExpr{
+        Op:   Star,
+        Left: pock.LiteralExpr{
+            Token: pock.Token{Type:Decimal, Lexeme:"123.45", IntegerValue:0, DecimalValue:123.45, StringValue:"", IdentifierValue:""},
+        },
+        Right: pock.LiteralExpr{
+            Token: pock.Token{Type:String, Lexeme:"\"d\"", IntegerValue:0, DecimalValue:0, StringValue:"d", IdentifierValue:""},
+        },
+    },
+    Right: pock.GetExpr{
+        Names: {"asdrg"},
+    },
+}
+---
+
+[TestParserErrors/4_<<_54 - 1]
+&fmt.wrapError{
+    msg: "parse error at '<': unexpected token",
+    err: &errors.errorString{s:"parse error"},
+}
+---
+
+[TestParserErrors/(41_+_d - 1]
+&fmt.wrapError{
+    msg: "parse error: missing closing parenthesis",
+    err: &errors.errorString{s:"parse error"},
+}
+---
+
+[TestParserSnapshots/true_&&_false_||_null_==_(42_/_2) - 1]
+pock.BinaryExpr{
+    Op:   Or,
+    Left: pock.BinaryExpr{
+        Op:   And,
+        Left: pock.LiteralExpr{
+            Token: pock.Token{Type:True, Lexeme:"true", IntegerValue:0, DecimalValue:0, StringValue:"", IdentifierValue:""},
+        },
+        Right: pock.LiteralExpr{
+            Token: pock.Token{Type:False, Lexeme:"false", IntegerValue:0, DecimalValue:0, StringValue:"", IdentifierValue:""},
+        },
+    },
+    Right: pock.BinaryExpr{
+        Op:   Eq,
+        Left: pock.LiteralExpr{
+            Token: pock.Token{Type:Null, Lexeme:"null", IntegerValue:0, DecimalValue:0, StringValue:"", IdentifierValue:""},
+        },
+        Right: pock.GroupExpr{
+            Expr: pock.BinaryExpr{
+                Op:   Slash,
+                Left: pock.LiteralExpr{
+                    Token: pock.Token{Type:Integer, Lexeme:"42", IntegerValue:42, DecimalValue:0, StringValue:"", IdentifierValue:""},
+                },
+                Right: pock.LiteralExpr{
+                    Token: pock.Token{Type:Integer, Lexeme:"2", IntegerValue:2, DecimalValue:0, StringValue:"", IdentifierValue:""},
+                },
+            },
+        },
+    },
+}
+---
+
+[TestParserErrors/(""+) - 1]
+&fmt.wrapError{
+    msg: "parse error at ')': unexpected token",
+    err: &errors.errorString{s:"parse error"},
+}
+---
+
+[TestParserErrors/--3 - 1]
+&fmt.wrapError{
+    msg: "parse error at '-': unexpected token",
+    err: &errors.errorString{s:"parse error"},
+}
+---
+
+[TestParserErrors/3* - 1]
+&fmt.wrapError{
+    msg: "parse error: unexpected end of expression",
+    err: &errors.errorString{s:"parse error"},
+}
+---
+
+[TestParserErrors/true_&&_||_false - 1]
+&fmt.wrapError{
+    msg: "parse error at '||': unexpected token",
+    err: &errors.errorString{s:"parse error"},
+}
+---
+
+[TestParserErrors/true_||_&&_false - 1]
+&fmt.wrapError{
+    msg: "parse error at '&&': unexpected token",
+    err: &errors.errorString{s:"parse error"},
+}
+---

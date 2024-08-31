@@ -1,4 +1,4 @@
-package parser
+package pock
 
 import (
 	"errors"
@@ -75,12 +75,12 @@ func (p *parser) parseOr() (Expr, error) {
 	}
 
 	for p.peek().Type == Or {
-		op, _ := p.advance()
+		p.advance()
 		right, err := p.parseAnd()
 		if err != nil {
 			return nil, err
 		}
-		expr = BinaryExpr{Op: op.Type, Left: expr, Right: right}
+		expr = BinaryExpr{Op: Or, Left: expr, Right: right}
 	}
 
 	return expr, nil
@@ -93,12 +93,12 @@ func (p *parser) parseAnd() (Expr, error) {
 	}
 
 	for p.peek().Type == And {
-		op, _ := p.advance()
+		p.advance()
 		right, err := p.parseComp()
 		if err != nil {
 			return nil, err
 		}
-		expr = BinaryExpr{Op: op.Type, Left: expr, Right: right}
+		expr = BinaryExpr{Op: And, Left: expr, Right: right}
 	}
 
 	return expr, nil
