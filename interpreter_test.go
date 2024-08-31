@@ -1,6 +1,8 @@
 package pock
 
 import (
+	"fmt"
+	"slices"
 	"strings"
 	"testing"
 
@@ -216,6 +218,31 @@ func TestInterpreterError(t *testing.T) {
 			_, err = i.Evaluate(expr)
 			require.Error(t, err)
 			snaps.MatchSnapshot(t, err)
+		})
+	}
+}
+
+var benchmarkValue Value
+
+func BenchmarkInterpreter(b *testing.B) {
+	for i := range 6 {
+		count := 1 << (i * 2)
+		b.Run(fmt.Sprint(count), func(b *testing.B) {
+			input := strings.Join(
+				slices.Repeat(
+					[]string{"(hello.world + 3 == 0) || (1.0 + 1 == 2.0)"},
+					count,
+				),
+				" && ",
+			)
+
+			b.ResetTimer()
+			for range b.N {
+				benchmarkTokens, _ = Scan(strings.NewReader(input))
+				benchmarkExpr, _ = Parse(benchmarkTokens)
+				s, _ := NewInterpreterWithState(map[string]any{"hello": map[string]any{"world": 1138}})
+				benchmarkValue, _ = s.Evaluate(benchmarkExpr)
+			}
 		})
 	}
 }
