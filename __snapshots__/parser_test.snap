@@ -1,9 +1,6 @@
 
 [TestParserErrors/#00 - 1]
-&fmt.wrapError{
-    msg: "parse error: unexpected end of expression",
-    err: &errors.errorString{s:"parse error"},
-}
+&errors.errorString{s:"unexpected end of expression"}
 ---
 
 [TestParserSnapshots/hello.world_>_3 - 1]
@@ -19,10 +16,7 @@ pock.BinaryExpr{
 ---
 
 [TestParserErrors/hello. - 1]
-&fmt.wrapError{
-    msg: "parse error at '': expected identifier after '.'",
-    err: &errors.errorString{s:"parse error"},
-}
+&errors.errorString{s:"at ``: expected identifier after `.`"}
 ---
 
 [TestParserSnapshots/"hello"_!=_"world" - 1]
@@ -38,17 +32,11 @@ pock.BinaryExpr{
 ---
 
 [TestParserErrors/.hello - 1]
-&fmt.wrapError{
-    msg: "parse error at '.': unexpected token",
-    err: &errors.errorString{s:"parse error"},
-}
+&errors.errorString{s:"at `.`: unexpected token"}
 ---
 
 [TestParserErrors/12_< - 1]
-&fmt.wrapError{
-    msg: "parse error: unexpected end of expression",
-    err: &errors.errorString{s:"parse error"},
-}
+&errors.errorString{s:"unexpected end of expression"}
 ---
 
 [TestParserSnapshots/((3+2)_-_14)_==_-19 - 1]
@@ -83,10 +71,7 @@ pock.BinaryExpr{
 ---
 
 [TestParserErrors/12.hello - 1]
-&fmt.wrapError{
-    msg: "parse error at 'hello': expected end of expression",
-    err: &errors.errorString{s:"parse error"},
-}
+&errors.errorString{s:"at `hello`: expected end of expression"}
 ---
 
 [TestParserSnapshots/123.45_*_"d"_<_asdrg - 1]
@@ -108,17 +93,11 @@ pock.BinaryExpr{
 ---
 
 [TestParserErrors/4_<<_54 - 1]
-&fmt.wrapError{
-    msg: "parse error at '<': unexpected token",
-    err: &errors.errorString{s:"parse error"},
-}
+&errors.errorString{s:"at `<`: unexpected token"}
 ---
 
 [TestParserErrors/(41_+_d - 1]
-&fmt.wrapError{
-    msg: "parse error: missing closing parenthesis",
-    err: &errors.errorString{s:"parse error"},
-}
+&errors.errorString{s:"missing closing parenthesis"}
 ---
 
 [TestParserSnapshots/true_&&_false_||_null_==_(42_/_2) - 1]
@@ -154,36 +133,21 @@ pock.BinaryExpr{
 ---
 
 [TestParserErrors/(""+) - 1]
-&fmt.wrapError{
-    msg: "parse error at ')': unexpected token",
-    err: &errors.errorString{s:"parse error"},
-}
+&errors.errorString{s:"at `)`: unexpected token"}
 ---
 
 [TestParserErrors/--3 - 1]
-&fmt.wrapError{
-    msg: "parse error at '-': unexpected token",
-    err: &errors.errorString{s:"parse error"},
-}
+&errors.errorString{s:"at `-`: unexpected token"}
 ---
 
 [TestParserErrors/3* - 1]
-&fmt.wrapError{
-    msg: "parse error: unexpected end of expression",
-    err: &errors.errorString{s:"parse error"},
-}
+&errors.errorString{s:"unexpected end of expression"}
 ---
 
 [TestParserErrors/true_&&_||_false - 1]
-&fmt.wrapError{
-    msg: "parse error at '||': unexpected token",
-    err: &errors.errorString{s:"parse error"},
-}
+&errors.errorString{s:"at `||`: unexpected token"}
 ---
 
 [TestParserErrors/true_||_&&_false - 1]
-&fmt.wrapError{
-    msg: "parse error at '&&': unexpected token",
-    err: &errors.errorString{s:"parse error"},
-}
+&errors.errorString{s:"at `&&`: unexpected token"}
 ---
