@@ -299,7 +299,7 @@ func scanToken(s scanner) (Token, error) {
 			if isDecimal {
 				val, err := strconv.ParseFloat(lex, 64)
 				if err != nil {
-					return Token{}, fmt.Errorf("invalid number: %w", err)
+					return Token{}, fmt.Errorf("invalid number: `%w`", err)
 				}
 				return Token{
 					Type:         Decimal,
@@ -309,7 +309,7 @@ func scanToken(s scanner) (Token, error) {
 			} else {
 				val, err := strconv.ParseInt(lex, 10, 64)
 				if err != nil {
-					return Token{}, fmt.Errorf("invalid number: %w", err)
+					return Token{}, fmt.Errorf("invalid number: `%w`", err)
 				}
 				return Token{
 					Type:         Integer,

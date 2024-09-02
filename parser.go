@@ -25,7 +25,7 @@ func Parse(tokens []Token) (Expr, error) {
 	if !p.eof() {
 		return nil,
 			fmt.Errorf(
-				"at '%s': expected end of expression",
+				"at `%s`: expected end of expression",
 				p.peek().Lexeme,
 			)
 	}
@@ -192,7 +192,7 @@ func (p *parser) parsePrimary() (Expr, error) {
 		return p.parseGet()
 	}
 
-	return nil, fmt.Errorf("at '%s': unexpected token", tok.Lexeme)
+	return nil, fmt.Errorf("at `%s`: unexpected token", tok.Lexeme)
 }
 
 func (p *parser) parseGroup() (Expr, error) {
@@ -214,7 +214,7 @@ func (p *parser) parseGet() (Expr, error) {
 		p.advance()
 		tok := p.peek()
 		if tok.Type != Identifier {
-			return nil, fmt.Errorf("at '%s': expected identifier after `.`", tok.Lexeme)
+			return nil, fmt.Errorf("at `%s`: expected identifier after `.`", tok.Lexeme)
 		}
 		names = append(names, tok.Lexeme)
 	}

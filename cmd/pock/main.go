@@ -71,14 +71,18 @@ func main() {
 			continue
 		}
 
-		switch value.(type) {
-		case string:
-			fmt.Printf("\"%s\"", value)
-		case nil:
+		if v, ok := value.GetInteger(); ok {
+			fmt.Print(v)
+		} else if v, ok := value.GetDecimal(); ok {
+			fmt.Print(v)
+		} else if v, ok := value.GetString(); ok {
+			fmt.Printf("\"%s\"", v)
+		} else if v, ok := value.GetBool(); ok {
+			fmt.Print(v)
+		} else if _, ok := value.GetNull(); ok {
 			fmt.Print("null")
-		default:
-			fmt.Print(value)
 		}
+
 		fmt.Println()
 	}
 }

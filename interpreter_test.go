@@ -14,12 +14,12 @@ func TestInterpreter(t *testing.T) {
 	type testCase struct {
 		state    map[string]any
 		input    string
-		expected Value
+		expected any
 	}
 	cases := []testCase{
 		{input: "true", expected: true},
 		{input: "false", expected: false},
-		{input: "null", expected: nullV},
+		{input: "null", expected: null},
 		{input: "3", expected: 3},
 		{input: "3.14", expected: 3.14},
 		{input: `"Hello World!"`, expected: "Hello World!"},

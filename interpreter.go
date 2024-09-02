@@ -4,17 +4,6 @@ import (
 	"fmt"
 )
 
-type (
-	Value        interface{}
-	IntValue     int64
-	DecimalValue float64
-	StringValue  string
-	BoolValue    bool
-	NullValue    struct{}
-)
-
-var nullV = NullValue{}
-
 type Interpreter struct {
 	variables map[string]any
 }
@@ -119,94 +108,94 @@ func (s Interpreter) evaluateBinary(expr BinaryExpr) (Value, error) {
 	}
 	switch expr.Op {
 	case Or:
-		left, right, ok := checkBinary[bool, bool](left, right)
+		left, right, ok := checkBinary[BoolValue, BoolValue](left, right)
 		if !ok {
 			return nil, fmt.Errorf("`||` operands must be boolean")
 		}
 		return left || right, nil
 	case And:
-		left, right, ok := checkBinary[bool, bool](left, right)
+		left, right, ok := checkBinary[BoolValue, BoolValue](left, right)
 		if !ok {
 			return nil, fmt.Errorf("`&&` operands must be boolean")
 		}
 		return left && right, nil
 	case Lt:
-		if left, right, ok := checkBinary[int64, int64](left, right); ok {
-			return left < right, nil
+		if left, right, ok := checkBinary[IntValue, IntValue](left, right); ok {
+			return BoolValue(left < right), nil
 		}
-		if left, right, ok := checkBinary[int64, float64](left, right); ok {
-			return float64(left) < right, nil
+		if left, right, ok := checkBinary[IntValue, DecimalValue](left, right); ok {
+			return BoolValue(DecimalValue(left) < right), nil
 		}
-		if left, right, ok := checkBinary[float64, int64](left, right); ok {
-			return left < float64(right), nil
+		if left, right, ok := checkBinary[DecimalValue, IntValue](left, right); ok {
+			return BoolValue(left < DecimalValue(right)), nil
 		}
-		if left, right, ok := checkBinary[float64, float64](left, right); ok {
-			return left < right, nil
+		if left, right, ok := checkBinary[DecimalValue, DecimalValue](left, right); ok {
+			return BoolValue(left < right), nil
 		}
 		return nil, fmt.Errorf("`<` operands must be integer or decimal")
 	case Lte:
-		if left, right, ok := checkBinary[int64, int64](left, right); ok {
-			return left <= right, nil
+		if left, right, ok := checkBinary[IntValue, IntValue](left, right); ok {
+			return BoolValue(left <= right), nil
 		}
-		if left, right, ok := checkBinary[int64, float64](left, right); ok {
-			return float64(left) <= right, nil
+		if left, right, ok := checkBinary[IntValue, DecimalValue](left, right); ok {
+			return BoolValue(DecimalValue(left) <= right), nil
 		}
-		if left, right, ok := checkBinary[float64, int64](left, right); ok {
-			return left <= float64(right), nil
+		if left, right, ok := checkBinary[DecimalValue, IntValue](left, right); ok {
+			return BoolValue(left <= DecimalValue(right)), nil
 		}
-		if left, right, ok := checkBinary[float64, float64](left, right); ok {
-			return left <= right, nil
+		if left, right, ok := checkBinary[DecimalValue, DecimalValue](left, right); ok {
+			return BoolValue(left <= right), nil
 		}
 		return nil, fmt.Errorf("`<=` operands must be integer or decimal")
 	case Gt:
-		if left, right, ok := checkBinary[int64, int64](left, right); ok {
-			return left > right, nil
+		if left, right, ok := checkBinary[IntValue, IntValue](left, right); ok {
+			return BoolValue(left > right), nil
 		}
-		if left, right, ok := checkBinary[int64, float64](left, right); ok {
-			return float64(left) > right, nil
+		if left, right, ok := checkBinary[IntValue, DecimalValue](left, right); ok {
+			return BoolValue(DecimalValue(left) > right), nil
 		}
-		if left, right, ok := checkBinary[float64, int64](left, right); ok {
-			return left > float64(right), nil
+		if left, right, ok := checkBinary[DecimalValue, IntValue](left, right); ok {
+			return BoolValue(left > DecimalValue(right)), nil
 		}
-		if left, right, ok := checkBinary[float64, float64](left, right); ok {
-			return left > right, nil
+		if left, right, ok := checkBinary[DecimalValue, DecimalValue](left, right); ok {
+			return BoolValue(left > right), nil
 		}
 		return nil, fmt.Errorf("`>` operands must be integer or decimal")
 	case Gte:
-		if left, right, ok := checkBinary[int64, int64](left, right); ok {
-			return left >= right, nil
+		if left, right, ok := checkBinary[IntValue, IntValue](left, right); ok {
+			return BoolValue(left >= right), nil
 		}
-		if left, right, ok := checkBinary[int64, float64](left, right); ok {
-			return float64(left) >= right, nil
+		if left, right, ok := checkBinary[IntValue, DecimalValue](left, right); ok {
+			return BoolValue(DecimalValue(left) >= right), nil
 		}
-		if left, right, ok := checkBinary[float64, int64](left, right); ok {
-			return left >= float64(right), nil
+		if left, right, ok := checkBinary[DecimalValue, IntValue](left, right); ok {
+			return BoolValue(left >= DecimalValue(right)), nil
 		}
-		if left, right, ok := checkBinary[float64, float64](left, right); ok {
-			return left >= right, nil
+		if left, right, ok := checkBinary[DecimalValue, DecimalValue](left, right); ok {
+			return BoolValue(left >= right), nil
 		}
 		return nil, fmt.Errorf("`>=` operands must be integer or decimal")
 	case Eq:
-		if left, right, ok := checkBinary[int64, int64](left, right); ok {
-			return left == right, nil
+		if left, right, ok := checkBinary[IntValue, IntValue](left, right); ok {
+			return BoolValue(left == right), nil
 		}
-		if left, right, ok := checkBinary[int64, float64](left, right); ok {
-			return float64(left) == right, nil
+		if left, right, ok := checkBinary[IntValue, DecimalValue](left, right); ok {
+			return BoolValue(DecimalValue(left) == right), nil
 		}
-		if left, right, ok := checkBinary[float64, int64](left, right); ok {
-			return left == float64(right), nil
+		if left, right, ok := checkBinary[DecimalValue, IntValue](left, right); ok {
+			return BoolValue(left == DecimalValue(right)), nil
 		}
-		if left, right, ok := checkBinary[float64, float64](left, right); ok {
-			return left == right, nil
+		if left, right, ok := checkBinary[DecimalValue, DecimalValue](left, right); ok {
+			return BoolValue(left == right), nil
 		}
-		if left, right, ok := checkBinary[bool, bool](left, right); ok {
-			return left == right, nil
+		if left, right, ok := checkBinary[BoolValue, BoolValue](left, right); ok {
+			return BoolValue(left == right), nil
 		}
-		if left, right, ok := checkBinary[string, string](left, right); ok {
-			return left == right, nil
+		if left, right, ok := checkBinary[StringValue, StringValue](left, right); ok {
+			return BoolValue(left == right), nil
 		}
 		if left, right, ok := checkBinary[NullValue, NullValue](left, right); ok {
-			return left == right, nil
+			return BoolValue(left == right), nil
 		}
 		return nil, fmt.Errorf(
 			"`==` operands mismatch: %s and %s",
@@ -214,26 +203,26 @@ func (s Interpreter) evaluateBinary(expr BinaryExpr) (Value, error) {
 			typeName(right),
 		)
 	case Neq:
-		if left, right, ok := checkBinary[int64, int64](left, right); ok {
-			return left != right, nil
+		if left, right, ok := checkBinary[IntValue, IntValue](left, right); ok {
+			return BoolValue(left != right), nil
 		}
-		if left, right, ok := checkBinary[int64, float64](left, right); ok {
-			return float64(left) != right, nil
+		if left, right, ok := checkBinary[IntValue, DecimalValue](left, right); ok {
+			return BoolValue(DecimalValue(left) != right), nil
 		}
-		if left, right, ok := checkBinary[float64, int64](left, right); ok {
-			return left != float64(right), nil
+		if left, right, ok := checkBinary[DecimalValue, IntValue](left, right); ok {
+			return BoolValue(left != DecimalValue(right)), nil
 		}
-		if left, right, ok := checkBinary[float64, float64](left, right); ok {
-			return left != right, nil
+		if left, right, ok := checkBinary[DecimalValue, DecimalValue](left, right); ok {
+			return BoolValue(left != right), nil
 		}
-		if left, right, ok := checkBinary[bool, bool](left, right); ok {
-			return left != right, nil
+		if left, right, ok := checkBinary[BoolValue, BoolValue](left, right); ok {
+			return BoolValue(left != right), nil
 		}
-		if left, right, ok := checkBinary[string, string](left, right); ok {
-			return left != right, nil
+		if left, right, ok := checkBinary[StringValue, StringValue](left, right); ok {
+			return BoolValue(left != right), nil
 		}
 		if left, right, ok := checkBinary[NullValue, NullValue](left, right); ok {
-			return left != right, nil
+			return BoolValue(left != right), nil
 		}
 		return nil, fmt.Errorf(
 			"`!=` operands mismatch: %s and %s",
@@ -241,59 +230,59 @@ func (s Interpreter) evaluateBinary(expr BinaryExpr) (Value, error) {
 			typeName(right),
 		)
 	case Plus:
-		if left, right, ok := checkBinary[int64, int64](left, right); ok {
-			return left + right, nil
+		if left, right, ok := checkBinary[IntValue, IntValue](left, right); ok {
+			return IntValue(left + right), nil
 		}
-		if left, right, ok := checkBinary[int64, float64](left, right); ok {
-			return float64(left) + right, nil
+		if left, right, ok := checkBinary[IntValue, DecimalValue](left, right); ok {
+			return DecimalValue(DecimalValue(left) + right), nil
 		}
-		if left, right, ok := checkBinary[float64, int64](left, right); ok {
-			return left + float64(right), nil
+		if left, right, ok := checkBinary[DecimalValue, IntValue](left, right); ok {
+			return DecimalValue(left + DecimalValue(right)), nil
 		}
-		if left, right, ok := checkBinary[float64, float64](left, right); ok {
-			return left + right, nil
+		if left, right, ok := checkBinary[DecimalValue, DecimalValue](left, right); ok {
+			return DecimalValue(left + right), nil
 		}
 		return nil, fmt.Errorf("`+` operands must be integer or decimal")
 	case Minus:
-		if left, right, ok := checkBinary[int64, int64](left, right); ok {
-			return left - right, nil
+		if left, right, ok := checkBinary[IntValue, IntValue](left, right); ok {
+			return IntValue(left - right), nil
 		}
-		if left, right, ok := checkBinary[int64, float64](left, right); ok {
-			return float64(left) - right, nil
+		if left, right, ok := checkBinary[IntValue, DecimalValue](left, right); ok {
+			return DecimalValue(DecimalValue(left) - right), nil
 		}
-		if left, right, ok := checkBinary[float64, int64](left, right); ok {
-			return left - float64(right), nil
+		if left, right, ok := checkBinary[DecimalValue, IntValue](left, right); ok {
+			return DecimalValue(left - DecimalValue(right)), nil
 		}
-		if left, right, ok := checkBinary[float64, float64](left, right); ok {
-			return left - right, nil
+		if left, right, ok := checkBinary[DecimalValue, DecimalValue](left, right); ok {
+			return DecimalValue(left - right), nil
 		}
 		return nil, fmt.Errorf("`-` operands must be integer or decimal")
 	case Star:
-		if left, right, ok := checkBinary[int64, int64](left, right); ok {
-			return left * right, nil
+		if left, right, ok := checkBinary[IntValue, IntValue](left, right); ok {
+			return IntValue(left * right), nil
 		}
-		if left, right, ok := checkBinary[int64, float64](left, right); ok {
-			return float64(left) * right, nil
+		if left, right, ok := checkBinary[IntValue, DecimalValue](left, right); ok {
+			return DecimalValue(DecimalValue(left) * right), nil
 		}
-		if left, right, ok := checkBinary[float64, int64](left, right); ok {
-			return left * float64(right), nil
+		if left, right, ok := checkBinary[DecimalValue, IntValue](left, right); ok {
+			return DecimalValue(left * DecimalValue(right)), nil
 		}
-		if left, right, ok := checkBinary[float64, float64](left, right); ok {
-			return left * right, nil
+		if left, right, ok := checkBinary[DecimalValue, DecimalValue](left, right); ok {
+			return DecimalValue(left * right), nil
 		}
 		return nil, fmt.Errorf("`*` operands must be integer or decimal")
 	case Slash:
-		if left, right, ok := checkBinary[int64, int64](left, right); ok {
-			return left / right, nil
+		if left, right, ok := checkBinary[IntValue, IntValue](left, right); ok {
+			return IntValue(left / right), nil
 		}
-		if left, right, ok := checkBinary[int64, float64](left, right); ok {
-			return float64(left) / right, nil
+		if left, right, ok := checkBinary[IntValue, DecimalValue](left, right); ok {
+			return DecimalValue(DecimalValue(left) / right), nil
 		}
-		if left, right, ok := checkBinary[float64, int64](left, right); ok {
-			return left / float64(right), nil
+		if left, right, ok := checkBinary[DecimalValue, IntValue](left, right); ok {
+			return DecimalValue(left / DecimalValue(right)), nil
 		}
-		if left, right, ok := checkBinary[float64, float64](left, right); ok {
-			return left / right, nil
+		if left, right, ok := checkBinary[DecimalValue, DecimalValue](left, right); ok {
+			return DecimalValue(left / right), nil
 		}
 		return nil, fmt.Errorf("`/` operands must be integer or decimal")
 	}
@@ -307,15 +296,15 @@ func (s Interpreter) evaluateUnary(expr UnaryExpr) (Value, error) {
 	}
 	switch expr.Op {
 	case Not:
-		if val, ok := val.(bool); ok {
+		if val, ok := val.(BoolValue); ok {
 			return !val, nil
 		}
 		return nil, fmt.Errorf("`!` operand must be boolean")
 	case Minus:
 		switch val := val.(type) {
-		case int64:
+		case IntValue:
 			return -val, nil
-		case float64:
+		case DecimalValue:
 			return -val, nil
 		}
 		return nil, fmt.Errorf("`-` operand must be integer or decimal")
@@ -353,23 +342,23 @@ func (s Interpreter) evaluateGet(expr GetExpr) (Value, error) {
 		return nil, fmt.Errorf("%s is not a primitive value", name)
 	}
 
-	return val, nil
+	return castValue(val), nil
 }
 
 func (s Interpreter) evaluateLiteral(expr LiteralExpr) (Value, error) {
 	switch expr.Token.Type {
 	case True:
-		return true, nil
+		return BoolValue(true), nil
 	case False:
-		return false, nil
+		return BoolValue(false), nil
 	case Null:
-		return nullV, nil
+		return null, nil
 	case Integer:
-		return expr.Token.IntegerValue, nil
+		return IntValue(expr.Token.IntegerValue), nil
 	case Decimal:
-		return expr.Token.DecimalValue, nil
+		return DecimalValue(expr.Token.DecimalValue), nil
 	case String:
-		return expr.Token.StringValue, nil
+		return StringValue(expr.Token.StringValue), nil
 	}
 	panic(
 		fmt.Sprintf(
@@ -380,7 +369,7 @@ func (s Interpreter) evaluateLiteral(expr LiteralExpr) (Value, error) {
 	)
 }
 
-func checkBinary[L, R interface{}](left, right any) (L, R, bool) {
+func checkBinary[L, R Value](left, right Value) (L, R, bool) {
 	var zeroL L
 	var zeroR R
 	leftL, ok := left.(L)
@@ -394,20 +383,38 @@ func checkBinary[L, R interface{}](left, right any) (L, R, bool) {
 	return leftL, rightR, true
 }
 
+func castValue(v any) Value {
+	switch v := v.(type) {
+	case Value:
+		return v
+	case bool:
+		return BoolValue(v)
+	case int64:
+		return IntValue(v)
+	case float64:
+		return DecimalValue(v)
+	case string:
+		return StringValue(v)
+	case nil, NullValue:
+		return null
+	}
+	panic(fmt.Sprintf("invalid value type: %T", v))
+}
+
 func typeName(v any) string {
 	switch v.(type) {
-	case bool:
+	case bool, BoolValue:
 		return "boolean"
-	case int64:
+	case int64, IntValue:
 		return "integer"
-	case float64:
+	case float64, DecimalValue:
 		return "decimal"
-	case string:
+	case string, StringValue:
 		return "string"
-	case NullValue:
-		return "null"
 	case map[string]any:
 		return "map"
+	case nil, NullValue:
+		return "null"
 	}
 	panic(fmt.Sprintf("invalid type: %T", v))
 }
