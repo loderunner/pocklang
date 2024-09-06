@@ -52,7 +52,10 @@ func loadState(base, state map[string]any) error {
 			base[k] = float64(v)
 		case map[string]any:
 			base[k] = map[string]any{}
-			loadState(base[k].(map[string]any), v)
+			err := loadState(base[k].(map[string]any), v)
+			if err != nil {
+				return err
+			}
 		default:
 			return fmt.Errorf("invalid type: %T", v)
 		}
@@ -317,7 +320,7 @@ func (s Interpreter) evaluateGroup(expr GroupExpr) (Value, error) {
 }
 
 func (s Interpreter) evaluateGet(expr GetExpr) (Value, error) {
-	if len(expr.Names) < 0 {
+	if len(expr.Names) == 0 {
 		panic("empty get expression")
 	}
 
@@ -385,8 +388,6 @@ func checkBinary[L, R Value](left, right Value) (L, R, bool) {
 
 func castValue(v any) Value {
 	switch v := v.(type) {
-	case Value:
-		return v
 	case bool:
 		return BoolValue(v)
 	case int64:
@@ -397,6 +398,8 @@ func castValue(v any) Value {
 		return StringValue(v)
 	case nil, NullValue:
 		return null
+	case Value:
+		return v
 	}
 	panic(fmt.Sprintf("invalid value type: %T", v))
 }

@@ -71,7 +71,7 @@ func (p *parser) parseOr() (Expr, error) {
 	}
 
 	for p.peek().Type == Or {
-		p.advance()
+		_, _ = p.advance()
 		right, err := p.parseAnd()
 		if err != nil {
 			return nil, err
@@ -89,7 +89,7 @@ func (p *parser) parseAnd() (Expr, error) {
 	}
 
 	for p.peek().Type == And {
-		p.advance()
+		_, _ = p.advance()
 		right, err := p.parseComp()
 		if err != nil {
 			return nil, err
@@ -113,7 +113,7 @@ func (p *parser) parseComp() (Expr, error) {
 		peekType == Gte ||
 		peekType == Eq ||
 		peekType == Neq {
-		p.advance()
+		_, _ = p.advance()
 		right, err := p.parseTerm()
 		if err != nil {
 			return nil, err
@@ -132,7 +132,7 @@ func (p *parser) parseTerm() (Expr, error) {
 
 	peekType := p.peek().Type
 	if peekType == Plus || peekType == Minus {
-		p.advance()
+		_, _ = p.advance()
 		right, err := p.parseFactor()
 		if err != nil {
 			return nil, err
@@ -151,7 +151,7 @@ func (p *parser) parseFactor() (Expr, error) {
 
 	peekType := p.peek().Type
 	if peekType == Star || peekType == Slash {
-		p.advance()
+		_, _ = p.advance()
 		right, err := p.parseUnary()
 		if err != nil {
 			return nil, err
@@ -165,7 +165,7 @@ func (p *parser) parseFactor() (Expr, error) {
 func (p *parser) parseUnary() (Expr, error) {
 	peekType := p.peek().Type
 	if peekType == Not || peekType == Minus {
-		p.advance()
+		_, _ = p.advance()
 		expr, err := p.parsePrimary()
 		if err != nil {
 			return nil, err
@@ -184,7 +184,7 @@ func (p *parser) parsePrimary() (Expr, error) {
 	tok := p.peek()
 	switch tok.Type {
 	case True, False, Null, Integer, Decimal, String:
-		p.advance()
+		_, _ = p.advance()
 		return LiteralExpr{Token: tok}, nil
 	case LeftParen:
 		return p.parseGroup()
@@ -196,7 +196,7 @@ func (p *parser) parsePrimary() (Expr, error) {
 }
 
 func (p *parser) parseGroup() (Expr, error) {
-	p.advance()
+	_, _ = p.advance()
 	expr, err := p.parseExpr()
 	if err != nil {
 		return nil, err
@@ -204,14 +204,14 @@ func (p *parser) parseGroup() (Expr, error) {
 	if p.peek().Type != RightParen {
 		return nil, fmt.Errorf("missing closing parenthesis")
 	}
-	p.advance()
+	_, _ = p.advance()
 	return GroupExpr{Expr: expr}, nil
 }
 
 func (p *parser) parseGet() (Expr, error) {
 	names := []string{p.peek().Lexeme}
-	for p.advance(); p.peek().Type == Dot; p.advance() {
-		p.advance()
+	for _, _ = p.advance(); p.peek().Type == Dot; _, _ = p.advance() {
+		_, _ = p.advance()
 		tok := p.peek()
 		if tok.Type != Identifier {
 			return nil, fmt.Errorf("at `%s`: expected identifier after `.`", tok.Lexeme)

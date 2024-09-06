@@ -127,8 +127,7 @@ type Token struct {
 type scanner struct {
 	io.RuneScanner
 
-	current rune
-	buf     *bytes.Buffer
+	buf *bytes.Buffer
 }
 
 func (s scanner) advance() (rune, error) {
@@ -293,7 +292,7 @@ func scanToken(s scanner) (Token, error) {
 				return Token{}, err
 			}
 			if !errors.Is(err, io.EOF) {
-				s.backtrack()
+				_ = s.backtrack()
 			}
 			lex := s.buf.String()
 			if isDecimal {
@@ -325,7 +324,7 @@ func scanToken(s scanner) (Token, error) {
 				return Token{}, err
 			}
 			if !errors.Is(err, io.EOF) {
-				s.backtrack()
+				_ = s.backtrack()
 			}
 			return Token{}, whitespaceError
 		}
@@ -336,7 +335,7 @@ func scanToken(s scanner) (Token, error) {
 			return Token{}, err
 		}
 		if !errors.Is(err, io.EOF) {
-			s.backtrack()
+			_ = s.backtrack()
 		}
 		lex := s.buf.String()
 		switch lex {
